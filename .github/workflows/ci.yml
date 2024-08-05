@@ -19,23 +19,28 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: maven
+      
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn package --file pom.xml
+      
       - name: Trivy FS scan
-        run: trivy fs --format table -o fs.html
+        run: trivy fs --format table -o fs.html .
+      
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@main
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name: Build the Docker image
+      - name: Set up Docker Buildx
       - uses: actions/checkout@v3
 
-      - name: Build the Docker image
-        run: docker build -t sruthilayagadila/dev-task-master:latest .
+      - name: Build Docker Image
+        run: | 
+            docker build -t sruthilayagadila/dev-task-master:latest .
 
       - name: Trivy Image scan
         run: trivy image --format table -o image.html sruthilayagadila/dev-task-master:latest
@@ -50,6 +55,7 @@ jobs:
         run: |
             docker push sruthilayagadila/dev-task-master:latest
 
+      - name: Kubectl Action
         uses: tale/kubectl-action@v1
         with:
          base64-kube-config: ${{ secrets.KUBE_CONFIG }}
