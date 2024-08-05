@@ -23,7 +23,7 @@ jobs:
         run: mvn package --file pom.xml
       
       - name: Trivy FS scan
-        run: trivy fs --format table -o fs.html
+        run: trivy fs --format table -o fs.html .
       
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@main
@@ -52,6 +52,7 @@ jobs:
       - name: Push Docker Image
         run: |
             docker push sruthilayagadila/dev-task-master:latest
+      
       - name: Kubectl Action
         uses: tale/kubectl-action@v1
         with:
