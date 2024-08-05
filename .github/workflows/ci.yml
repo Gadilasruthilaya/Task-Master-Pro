@@ -18,23 +18,26 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
+          
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn package --file pom.xml
+      
       - name: Trivy FS scan
         run: trivy fs --format table -o fs.html
+      
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@main
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+     
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Build the Docker image
       - uses: actions/checkout@v3
 
-      - name: Build the Docker image
+      - name: Build the Docker image of current project
         run: docker build -t sruthilayagadila/dev-task-master:latest .
 
       - name: Trivy Image scan
