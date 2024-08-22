@@ -9,7 +9,6 @@ on:
 jobs:
   build:
 
-
     runs-on: self-hosted
 
     steps:
@@ -24,6 +23,7 @@ jobs:
           docker pull sruthilayagadila/dev-task-master:latest
           docker tag sruthilayagadila/dev-task-master:latest sruthilayagadila/prod-task-master:latest
           docker push sruthilayagadila/prod-task-master:latest
+   
     - name: Kubectl Action
       uses: tale/kubectl-action@v1
       with:
